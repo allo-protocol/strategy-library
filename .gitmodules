@@ -4,3 +4,6 @@
 [submodule "lib/solmate"]
 	path = lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "lib/allo-v2-contracts"]
+	path = lib/allo-v2-contracts
+	url = https://github.com/allo-protocol/allo-v2-contracts

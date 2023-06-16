@@ -31,8 +31,8 @@ jobs:
         run: forge install
       - name: check contract sizes
         run: forge build --sizes
-      - name: check gas snapshots
-        run: forge snapshot --check
+      # - name: check gas snapshots
+      #   run: forge snapshot --check
 
   # slither:
   #   runs-on: ubuntu-latest

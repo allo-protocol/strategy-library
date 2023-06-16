@@ -2,6 +2,8 @@
 pragma solidity ^0.8.19;
 
 import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
+// todo: update name in v2-contracts repo
+import {Metadata} from "../../../lib/allo-v2/contracts/core/libraries/Metadata.sol";
 
 /// @title AllPayAuction
 /// @notice This contract implements an allocation strategy for a given distribution strategy.
@@ -15,6 +17,8 @@ contract AllPayAuction is IAllocationStrategy {
 
     uint public startTime;
     uint public endTime;
+
+    mapping(address => uint) public bids;
 
     /// @dev adding owner and distribution strategy to the constructor
     constructor(
@@ -37,6 +41,11 @@ contract AllPayAuction is IAllocationStrategy {
         bytes memory _data
     ) external payable override returns (bytes memory) {
         // Implement the function here, including decoding _data and storing the applicant.
+
+        // todo: do we want to use the registry here? @KurtMerbeth @thelostone-mc
+        // (address applicant, Metadata.IdentityDetails memory metadata) = abi
+        //     .decode(_data, (address, Metadata.IdentityDetails));
+
         // Return some bytes data.
         return _data;
     }
@@ -45,7 +54,7 @@ contract AllPayAuction is IAllocationStrategy {
         bytes memory _data
     ) external payable override returns (uint) {
         // Implement the function here, including decoding _data and performing necessary actions.
-        // Return the number of votes cast. For now, return a dummy value.
+        // Return the number of votes cast.
         (address applicant, uint amount) = abi.decode(_data, (address, uint));
 
         // add checks for startTime and endTime
@@ -59,6 +68,7 @@ contract AllPayAuction is IAllocationStrategy {
             "Applicant must not be the highest bidder"
         );
 
+        bids[applicant] += amount;
         highestBidder = applicant;
 
         return amount;

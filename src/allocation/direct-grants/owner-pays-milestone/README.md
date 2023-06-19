@@ -1,13 +1,14 @@
 # Owner Pays Milestone Direct Grants Allocation Strategy
 
-@owner | date
+@allo-team | June 19, 2023
 
 [Reference]()
 
 ## Overview
 What is this a spec for? What does it do? Explain it
+
 ## Smart Contract Specification
-`contractName1.sol`
+`template.sol`
 
 What happens in this contract? What is responsible for?
 
@@ -21,19 +22,3 @@ method methodName2()
 ```
 
 What does this method do? Why is it necessary?
-
-`contractName2.sol`
-
-What happens in this contract? What is responsible for?
-
-
-```solidity
-method methodName1()
-```
-What does this method do? Why is it necessary
-
-
-```solidity
-method methodName2()
-```
-What does this method do? Why is it necessary

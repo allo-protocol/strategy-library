@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract qfAllocationStrategy is IAllocationStrategy {
+contract QFAllocationStrategy is IAllocationStrategy {
 
     // NOTE: Should support multicall using OZ's Multicall2
 
@@ -81,6 +81,10 @@ contract qfAllocationStrategy is IAllocationStrategy {
     function updateVotingEnd(uint64 _votingEnd) external {}
     function updateApplicationStart(uint64 _applicationStart) external {}
     function updateApplicationEnd(uint64 _applicationEnd) external {}
+    function reviewApplications(bytes[] memory _data) external {
+        // decode data to get application id and status
+        // update application status
+    }
     function setPayouts(bytes memory _data) external isPoolOwner(){
         // sets project to percentage ratio
         // would be invoked by pool owner for off-chain logic

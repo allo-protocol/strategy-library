@@ -1,15 +1,18 @@
 ## Overview 
 
-Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557412142387&cot=14
+Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557414692165&cot=14
 
 
 #### New Variables
 ```javascript
+// some means to track votes casted
+mapping (address => uint32) votesCastedByVoter;
+
 // create a mapping of application id to application status 
 mapping (bytes32 => ApplicationStatus) applicationStatuses;
 
-// payouts data which will be set using setPayouts
-mapping (bytes32 => uint32) applicationPayouts;
+// data will which be used to generate payouts
+mapping (bytes32 => uint32) votesReceived;
 ```
 
 #### New Functions
@@ -29,11 +32,6 @@ Functions around actual functionality
 function reviewApplications(bytes[] memory _data) external {
     // decode data to get application id and status
     // update application status
-}
-
-function setPayouts(bytes memory _data) external isPoolOwner(){
-    // sets project to percentage ratio
-    // would be invoked by pool owner for off-chain logic
 }
 ```
 

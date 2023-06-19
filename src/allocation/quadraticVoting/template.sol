@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
+
 contract QVAllocationStrategy is IAllocationStrategy {
 
     // NOTE: Should support multicall using OZ's Multicall2
 
     uint256 poolId;
     address allo;
+    // todo: should we name this poolOwner?
+    address strategyOwner;
 
     uint64 applicationStart;
     uint64 applicationEnd;
@@ -26,6 +30,7 @@ contract QVAllocationStrategy is IAllocationStrategy {
         // set common params
         //  - poolId
         //  - allo
+        //  - owner
 
         // parameters required for QF
         //  - applicationStart
@@ -40,6 +45,7 @@ contract QVAllocationStrategy is IAllocationStrategy {
 
     function owner() external view returns (address) {
         // returns pool owner by query allo contract
+        return strategyOwner;
     }
 
 

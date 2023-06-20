@@ -22,15 +22,11 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         // Reapplied @discuss: How do we add new status
     }
 
-     // identityId => allocationAmount
-    EnumerableMap.AddressToUintMap private allocationTracker;
-    uint256 totalAllocations;
-
     function initialize(bytes calldata encodedParameters  ) external initializer {
         // set common params
         //  - poolId
         //  - allo
-        // parameters required for QF
+        // parameters required
         //  - applicationStart
         //  - applicationEnd
         //  - allocationStart
@@ -81,6 +77,10 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     // -- CUSTOM Variables
+
+    // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
 
     struct Application {
         address identityId;

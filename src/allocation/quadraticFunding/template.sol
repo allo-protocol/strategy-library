@@ -15,10 +15,6 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     uint64 votingStart;
     uint64 votingEnd;
 
-    // identityId => allocationAmount
-    EnumerableMap.AddressToUintMap private allocationTracker;
-    uint256 totalAllocations;
-
     enum ApplicationStatus {
         None,
         Pending,
@@ -84,6 +80,10 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     // -- CUSTOM Variables
+
+    // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
 
     // create a mapping of IdentityId to application status
     struct Application {

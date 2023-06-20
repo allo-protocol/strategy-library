@@ -5,7 +5,7 @@ import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interface
 
 contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
-
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
     uint256 poolId;
     address allo;
 
@@ -21,6 +21,10 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         Rejected
         // Reapplied @discuss: How do we add new status
     }
+
+     // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
 
     function initialize(bytes calldata encodedParameters  ) external initializer {
         // set common params
@@ -62,15 +66,18 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function allocate(bytes memory _data, address sender) external payable returns (uint) {
-        // decode data to get identityId, amount, token
+        // decode data to get identityId, amount
         // check application status
         // check if allocator is valid
         // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
-        // update votesReceived on applications mapping
+        // add allocation to allocation tracker
+        // add allocation to total allocations
     }
 
     function generatePayouts() external payable returns (bytes memory) {
-        // uses votesReceived from applications as input to run the QV math to generate payout
+        // uses allocationTracker as input
+        // loop through allocationTracker and generate payouts
+        // calc (allocationTracker.at(index) * 100) / totalAllocations
     }
 
     // -- CUSTOM Variables
@@ -80,7 +87,6 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         address recipientAddress;
         ApplicationStatus status;
         MetaPtr metaPtr;
-        uint32 votesReceived;
     }
 
     // create a mapping of applicationId to application status

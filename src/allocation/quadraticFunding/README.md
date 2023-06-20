@@ -5,15 +5,23 @@ Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557412142387&
 
 #### New Variables
 ```javascript
-// create a mapping of application id to application status 
-mapping (bytes32 => ApplicationStatus) applicationStatuses;
+// create a mapping of IdentityId to application status
+struct Application {
+    address identityId;
+    address recipientAddress;
+    ApplicationStatus status;
+    MetaPtr metaPtr;
+}
 
+// create a mapping of applicationId to application status
+mapping(address => Application) applications;
+
+// payouts data which will be set using setPayouts
 struct Payout {
-    bytes32 applicationId;
+    address recipientAddress;
     uint32 percentage;
 }
 
-// payouts data which will be set using setPayouts
 Payouts[] public payouts;
 ```
 
@@ -32,12 +40,13 @@ Functions around actual functionality
 
 ```javascript
 function reviewApplications(bytes[] memory _data) external {
-    // decode data to get application id and status
+    // decode data to get identity id and status
     // update application status
 }
 
 function setPayouts(bytes memory _data) external isPoolOwner(){
-    // set payouts
+    // TODO: discuss if this should be on distribution strategy
+    // populate payouts array
     // would be invoked by pool owner for off-chain logic
 }
 ```

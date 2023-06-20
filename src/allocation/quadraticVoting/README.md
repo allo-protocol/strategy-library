@@ -5,14 +5,19 @@ Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557414692165&
 
 #### New Variables
 ```javascript
+struct Application {
+    address identityId;
+    address recipientAddress;
+    ApplicationStatus status;
+    MetaPtr metaPtr;
+    uint32 votesReceived;
+}
+
+// create a mapping of applicationId to application status
+mapping(address => Application) applications;
+
 // some means to track votes casted
-mapping (address => uint32) votesCastByUser;
-
-// create a mapping of application id to application status 
-mapping (bytes32 => ApplicationStatus) applicationStatuses;
-
-// data will which be used to generate payouts
-mapping (bytes32 => uint32) votesReceived;
+mapping(address => uint32) votesCastByUser;
 ```
 
 #### New Functions
@@ -30,7 +35,7 @@ Functions around actual functionality
 
 ```javascript
 function reviewApplications(bytes[] memory _data) external {
-    // decode data to get application id and status
+    // decode data to get identity id and status
     // update application status
 }
 ```

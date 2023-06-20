@@ -40,42 +40,56 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data
+        bytes memory _data,
+        address sender
     ) external payable returns (bytes memory) {
         // decode data to get
-        //  - project Id
+        //  - identityId
         //  - applicationMetaPtr
+        //  - recipientAddress
+
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
-        // set application status to pending
-        // if they invoke this function again, we should update the application status to reapplied
+ 
+        // set application status to pending or reapplied
+        // add / update applications mapping
     }
 
     function getApplicationStatus(
         bytes memory _data
     ) external view returns (ApplicationStatus) {
-        // decode data to get application id
-        // return application status from mapping
+        // decode data to get identityId
+        // return application status from applications mapping
     }
 
-    function allocate(bytes memory _data) external payable returns (uint) {
-        // decode data to get application, amount, token
-        // check application status
+    function allocate(
+        bytes memory _data,
+        address sender
+    ) external payable returns (uint) {
+        // decode data to get identityId, amount, token
+        // check application status from applications mapping
         // transfer tokens to project payout address
     }
 
     function generatePayouts() external payable returns (bytes memory) {
-        // returns applicationPayouts
+        // returns payouts
     }
 
     // -- CUSTOM Variables
 
-    // create a mapping of application id to application status
-    mapping(bytes32 => ApplicationStatus) applicationStatuses;
+    // create a mapping of IdentityId to application status
+    struct Application {
+        address identityId;
+        address recipientAddress;
+        ApplicationStatus status;
+        MetaPtr metaPtr;
+    }
+
+    // create a mapping of applicationId to application status
+    mapping(address => Application) applications;
 
     // payouts data which will be set using setPayouts
-
     struct Payout {
-        bytes32 applicationId;
+        address recipientAddress;
         uint32 percentage;
     }
 
@@ -91,12 +105,13 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     function updateApplicationEnd(uint64 _applicationEnd) external {}
  
     function reviewApplications(bytes[] memory _data) external {
-        // decode data to get application id and status
+        // decode data to get identity id and status
         // update application status
     }
 
     function setPayouts(bytes memory _data) external isPoolOwner {
-        // sets project to percentage ratio
+        // TODO: discuss if this should be on distribution strategy
+        // populate payouts array
         // would be invoked by pool owner for off-chain logic
     }
 }

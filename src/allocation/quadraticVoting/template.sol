@@ -22,7 +22,7 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         // Reapplied @discuss: How do we add new status
     }
 
-    function initialize(bytes calldata encodedParameters  ) external initializer
+    function initialize(bytes calldata encodedParameters  ) external initializer {
         // set common params
         //  - poolId
         //  - allo
@@ -41,45 +41,54 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data
+        bytes memory _data,
+        address sender
     ) external payable returns (bytes memory) {
         // decode data to get
-        //  - project Id
+        //  - identityId
         //  - applicationMetaPtr
+        //  - recipientAddress
+
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
-        // set application status to pending
-        // if they invoke this function again, we should update the application status to reapplied
+ 
+        // set application status to pending or reapplied
+        // add / update applications mapping
     }
 
     function getApplicationStatus(
         bytes memory _data
     ) external view returns (ApplicationStatus) {
-        // decode data to get application id
-        // return application status from mapping
+        // decode data to get identityId
+        // return application status from applications mapping
     }
 
     function allocate(bytes memory _data) external payable returns (uint) {
-        // decode data to get application, amount, token
+        // decode data to get identityId, amount, token
         // check application status
         // check if allocator is valid
         // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
-        // update votesReceived
+        // update votesReceived on applications mapping
     }
 
     function generatePayouts() external payable returns (bytes memory) {
-        // uses votesReceived as input to run the QV math to generate payout
+        // uses votesReceived from applications as input to run the QV math to generate payout
     }
 
     // -- CUSTOM Variables
 
+    struct Application {
+        address identityId;
+        address recipientAddress;
+        ApplicationStatus status;
+        MetaPtr metaPtr;
+        uint32 votesReceived;
+    }
+
+    // create a mapping of applicationId to application status
+    mapping(address => Application) applications;
+
     // some means to track votes casted
     mapping(address => uint32) votesCastByUser;
-
-    // create a mapping of application id to application status
-    mapping(bytes32 => ApplicationStatus) applicationStatuses;
-
-    // data will which be used to generate payouts
-    mapping(bytes32 => uint32) votesReceived;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}
@@ -91,7 +100,7 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     function updateApplicationEnd(uint64 _applicationEnd) external {}
 
     function reviewApplications(bytes[] memory _data) external {
-        // decode data to get application id and status
+        // decode data to get identity id and status
         // update application status
     }
 }

@@ -27,14 +27,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         Allocated // How do we add new status ?
     }
 
-    // NOTE: do we need the application metadata here?
-    struct Application {
-        bytes32 id;
-        address applicant;
-        ApplicationStatus status;
-    }
-
-    // Constructor
+    // initialize
     function initialize(bytes calldata encodedParameters  ) external initializer {
         // set common params
         //  - poolId

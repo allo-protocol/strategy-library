@@ -52,7 +52,7 @@ function reviewApplications(bytes[] memory _data) external {
 The allocation strategy can be customized for different usecase
 
 - Application Gating 
-    - update constructor (if applicable)
+    - update initialize() (if applicable)
     - update applyToRound to invoke contracts to check gating
 - Allocation Gating
     - allocators could have SBT/ EAS

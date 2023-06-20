@@ -44,9 +44,13 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
         // returns pool owner by query allo contract
     }
 
+    modifier isPoolOwner(address sender) {
+        // query IAllo contract to get pool owner
+        _;
+    }
+
     function applyToPool(
-        bytes memory _data,
-        address sender
+        bytes memory _data
     ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId
@@ -70,20 +74,29 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable override returns (uint) {
+    ) external payable override isPoolOwner(sender) returns (uint) {
         // external contract needs to implement beforeAllocate and afterAllocate
         // externalContract.beforeAllocate(_data, sender);
         // decode data to get identityId, amount
-        // check application status
-        // check if allocator is valid
-        // check if allocator has enough votes (check voteCounter <= votesPerAllocator)
-        // add allocation to allocation tracker
-        // add allocation to total allocations
+        address[] memory identityIds = abi.decode(_data, (address[]));
+
+        for (uint i = 0; i < identityIds.length; i++) {
+            // check application status
+            // check if allocator is valid
+            // check if allocator has enough votes (check voteCounter <= votesPerAllocator)
+            // add allocation to allocation tracker
+            // add allocation to total allocations
+        }
         // externalContract.afterAllocate(_data, sender);
         return 0;
     }
 
-    function generatePayouts() external payable override returns (bytes memory) {
+    function generatePayouts()
+        external
+        payable
+        override
+        returns (bytes memory)
+    {
         // uses allocationTracker as input
         // loop through allocationTracker and generate payouts
         // calc (allocationTracker.at(index) * 100) / totalAllocations

@@ -51,9 +51,8 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data,
-        address sender
-    ) external payable override isPoolOwner(sender) returns (bytes memory) {
+        bytes memory _data
+    ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId
         //  - applicationMetaPtr
@@ -87,7 +86,7 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable returns (uint) {
+    ) external payable isPoolOwner(sender) returns (uint) {
         // decode data to get identityId, amount
         // check application status
         // check if allocator is valid

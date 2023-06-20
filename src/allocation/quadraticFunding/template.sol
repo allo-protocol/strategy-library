@@ -46,13 +46,23 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
         //  - applicationEnd
         //  - allocationStart
         //  - allocationEnd
+        (
+            poolId,
+            allo,
+            applicationStart,
+            applicationEnd,
+            votingStart,
+            votingEnd
+        ) = abi.decode(
+            encodedParameters,
+            (uint256, address, uint64, uint64, uint64, uint64)
+        );
         // optional paramers for application or allocation gating
         // - EAS contract / registry contract/ POH contract address
     }
 
     function applyToPool(
-        bytes memory _data,
-        address sender
+        bytes memory _data
     ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId
@@ -73,7 +83,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable isPoolOwner(sender) override returns (uint) {
+    ) external payable override isPoolOwner(sender) returns (uint) {
         // decode data to get identityId, amount, token
         // decode data to get list of
         //  - identityId

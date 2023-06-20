@@ -57,8 +57,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data,
-        address sender
+        bytes memory _data
     ) external payable override returns (bytes memory) {
         // NOTE: logic if we wanted to gate applications based on EAS / registry check
         // decode data to create Application struct with status pending

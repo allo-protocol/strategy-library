@@ -44,23 +44,42 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data,
-        address sender
+        bytes memory _data
     ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId
         //  - applicationMetaPtr
         //  - recipientAddress
+        (
+            address identityId,
+            MetaPtr memory applicationMetaPtr,
+            address recipientAddress
+        ) = abi.decode(_data, (address, MetaPtr, address));
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
+        Application storage application = applications[identityId];
         // set application status to pending or reapplied
-        // add / update applications mapping
+        if (application.status == ApplicationStatus.None) {
+            application.status = ApplicationStatus.Pending;
+        } else if (application.status == ApplicationStatus.Rejected) {
+            // todo: will it ever be rejected at this point?
+        } else {
+            // todo: figure the reapplied out
+            // application.status = ApplicationStatus.Reapplied;
+        }
+
+        // update application data
+        application.identityId = identityId;
+        application.recipientAddress = recipientAddress;
+        application.metaPtr = applicationMetaPtr;
+
+        return abi.encode(identityId, applicationMetaPtr, recipientAddress);
     }
 
     function getApplicationStatus(
         bytes memory _data
     ) external view returns (ApplicationStatus) {
         // decode data to get identityId
-        (address identityId) = abi.decode(_data, (address));
+        address identityId = abi.decode(_data, (address));
 
         // return application status from applications mapping
         return applications[identityId].status;
@@ -95,14 +114,14 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     // create a mapping of applicationId to application status
-    mapping(address => Application) applications;
+    mapping(address => Application) public applications;
 
     // some means to track votes casted by user
-    mapping(address => uint32) voteCounter;
+    mapping(address => uint32) public voteCounter;
 
     // identityId => allocationAmount
-    EnumerableMap.AddressToUintMap private allocationTracker;
-    uint256 totalAllocations;
+    EnumerableMap.AddressToUintMap private _allocationTracker;
+    uint256 public totalAllocations;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

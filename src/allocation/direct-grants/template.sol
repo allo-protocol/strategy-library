@@ -81,16 +81,16 @@ contract DirectGrants is IAllocationStrategy, Initializable {
 
     // -- CUSTOM Variables
 
-    struct Application {
+    struct MilestoneApplication {
         MetaPtr metaPtr;
         address identityId;
         address recipientAddress;
-        uint256 requestedAmount;
+        uint256 requestedAmount; // uint256 amountPaid => set by pool owner
         ApplicationStatus status;
     }
 
-    // stores mapping from identityId -> Application
-    mapping (address => Application[]) public applications;
+    // stores mapping from identityId -> MilestoneApplication
+    mapping (address => MilestoneApplication[]) public applications;
 
     // -- CUSTOM Functions
 

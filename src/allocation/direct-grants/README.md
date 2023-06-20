@@ -46,6 +46,9 @@ function reviewApplications(bytes[] memory _data) external {
 - Is there an application period ? 
 - Are we intending to have committee different from pool owner ? When are these committee owners set ?
 - Update IAllocationStrategy.allocate to accept msg.sender as argument (set by IAllo)
+- Question to product: When i submit a milestone application ->
+    - do i request amount to be paid
+    - or is it pre-determined
 
 ## Variations
 

@@ -13,7 +13,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
 
     // The id of the Pool contract that this strategy is going to use.
     // NOTE: how are we going to use the pool id?
-    uint256 pool;
+    uint256 public pool;
 
     modifier isPoolOwner(address sender) {
         // query IAllo contract to get pool owner
@@ -47,7 +47,10 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         bytes memory _data
     ) external view returns (ApplicationStatus) {
         // decode data to get identityId
-        (address identityId, uint32 index) = abi.decode(_data, (address, uint32));
+        (address identityId, uint32 index) = abi.decode(
+            _data,
+            (address, uint32)
+        );
 
         // return application status from applications mapping
         return applications[identityId][index].status;
@@ -132,6 +135,13 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         //  - identityId
         //  - index of application (to know which milestone)
         //  - status
+
         // update application status in applications mapping
+        for (uint i = 0; i < _data.length; i++) {
+            (address identityId, uint32 indexes, ApplicationStatus status) = abi
+                .decode(_data[i], (address, uint32, ApplicationStatus));
+
+            applications[identityId][indexes].status = status;
+        }
     }
 }

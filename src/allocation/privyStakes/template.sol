@@ -38,14 +38,22 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         //  - allowed list of voters
     }
 
-    function owner() external view returns (address) {
+    function owner() public view returns (address) {
         // returns pool owner by query allo contract
+    }
+
+    modifier isPoolOwner(address sender) {
+        require(
+            sender == owner(),
+            "PrivyStakesAllocationStrategy: Only pool owner can call this function"
+        );
+        _;
     }
 
     function applyToPool(
         bytes memory _data,
         address sender
-    ) external payable override returns (bytes memory) {
+    ) external payable override isPoolOwner(sender) returns (bytes memory) {
         // decode data to get
         //  - identityId
         //  - applicationMetaPtr
@@ -70,7 +78,7 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         bytes memory _data
     ) external view returns (ApplicationStatus) {
         // decode data to get identityId
-        (address identityId) = abi.decode(_data, (address));
+        address identityId = abi.decode(_data, (address));
 
         // return application status from applications mapping
         return applications[identityId].status;

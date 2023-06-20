@@ -31,6 +31,11 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
         // returns pool owner by query allo contract
     }
 
+    modifier isPoolOwner(address sender) {
+        // query IAllo contract to get pool owner
+        _;
+    }
+
     function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
         //  - poolId
@@ -68,7 +73,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable override returns (uint) {
+    ) external payable isPoolOwner(sender) override returns (uint) {
         // decode data to get identityId, amount, token
         // decode data to get list of
         //  - identityId
@@ -121,10 +126,6 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     Payout[] public payouts;
 
     // -- CUSTOM FUNCTIONS
-    modifier isPoolOwner(address sender) {
-        // query IAllo contract to get pool owner
-        _;
-    }
 
     function updateVotingStart(uint64 _votingStart) external {}
 

@@ -1,2 +1,12 @@
+@openzeppelin/contracts-upgradeable/=lib/allo-v2/lib/openzeppelin-contracts-upgradeable/contracts/
+@openzeppelin/contracts/=lib/allo-v2/lib/openzeppelin-contracts/contracts/
+allo-v2/=lib/allo-v2/contracts/
 ds-test/=lib/forge-std/lib/ds-test/src/
+erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/
+eth-gas-reporter/=lib/allo-v2/node_modules/eth-gas-reporter/
 forge-std/=lib/forge-std/src/
+hardhat/=lib/allo-v2/node_modules/hardhat/
+openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/
+openzeppelin-contracts/=lib/openzeppelin-contracts/
+openzeppelin/=lib/openzeppelin-contracts-upgradeable/contracts/
+solmate/=lib/solmate/src/

@@ -2,17 +2,20 @@
 pragma solidity ^0.8.0;
 
 import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
+import {Initializable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {EnumerableMap} from "openzeppelin-contracts/contracts/utils/structs/EnumerableMap.sol";
+import {MetaPtr} from "../../../lib/allo-v2/contracts/utils/MetaPtr.sol";
 
 contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
     using EnumerableMap for EnumerableMap.AddressToUintMap;
-    uint256 poolId;
-    address allo;
+    uint256 public poolId;
+    address public allo;
 
-    uint64 applicationStart;
-    uint64 applicationEnd;
-    uint64 votingStart;
-    uint64 votingEnd;
+    uint64 public applicationStart;
+    uint64 public applicationEnd;
+    uint64 public votingStart;
+    uint64 public votingEnd;
 
     enum ApplicationStatus {
         None,
@@ -79,8 +82,8 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     // -- CUSTOM Variables
 
     // identityId => allocationAmount
-    EnumerableMap.AddressToUintMap private allocationTracker;
-    uint256 totalAllocations;
+    EnumerableMap.AddressToUintMap private _allocationTracker;
+    uint256 private _totalAllocations;
 
     struct Application {
         address identityId;
@@ -90,10 +93,10 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     // create a mapping of applicationId to application status
-    mapping(address => Application) applications;
+    mapping(address => Application) public applications;
 
     // some means to track votes casted
-    mapping(address => uint32) votesCastByUser;
+    mapping(address => uint32) public votesCastByUser;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

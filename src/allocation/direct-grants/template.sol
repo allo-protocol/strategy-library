@@ -63,11 +63,22 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         // decode data to get list of 
         //  - identityId
         //  - index of application (to know which milestone)
+        (address[] memory identityIds) = abi.decode(
+            _data,
+            (address[])
+        );
+
+        for(uint i = 0; i < identityIds.length; i++) {
+            // get application from applications mapping
+            // check if application milestone is accepted (lookup applications mapping)
+            // update application to status to ALLOCATED and make payment
+            // emit event
+        }
 
         // check if application milestone is accepted (lookup applications mapping)
         // update application to status to ALLOCATED and make payment
         // emit event
-        return amount;
+        return 1;
     }
 
     // NOTE: This will not be used in a direct grants strategy, no distribution strategy will be implemented.

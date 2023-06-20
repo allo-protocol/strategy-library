@@ -20,7 +20,6 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         _;
     }
 
-
     enum ApplicationStatus {
         None,
         Pending,
@@ -30,27 +29,36 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     // initialize
-    function initialize(bytes calldata encodedParameters  ) external initializer {
+    function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
         //  - poolId
         //  - allo
         // parameters required for direct grants
-
         // optional paramers for application or allocation gating
         // - EAS contract / registry contract/ POH contract address
     }
 
     // call to allo() and query pools[poolId].owner
-    function owner() external view returns (address);
-
-    function getApplicationStatus(bytes memory _data) external view returns (ApplicationStatus) {
-        // decode data to get application id
-        // return application status from mapping
+    function owner() external view override returns (address) {
+        // returns pool owner by query allo contract
     }
-   
-    function applyToPool(bytes memory _data, address sender) external payable override {
+
+    function getApplicationStatus(
+        bytes memory _data
+    ) external view returns (ApplicationStatus) {
+        // decode data to get identityId
+        (address identityId, uint32 index) = abi.decode(_data, (address, uint32));
+
+        // return application status from applications mapping
+        return applications[identityId][index].status;
+    }
+
+    function applyToPool(
+        bytes memory _data,
+        address sender
+    ) external payable override returns (bytes memory) {
         // NOTE: logic if we wanted to gate applications based on EAS / registry check
-        // decode data to create Application struct with status pending 
+        // decode data to create Application struct with status pending
         // add it to applications mapping
         // emit event
     }
@@ -58,17 +66,13 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable override isPoolOwner(sender) returns (uint)  {
-
-        // decode data to get list of 
+    ) external payable override isPoolOwner(sender) returns (uint) {
+        // decode data to get list of
         //  - identityId
         //  - index of application (to know which milestone)
-        (address[] memory identityIds) = abi.decode(
-            _data,
-            (address[])
-        );
+        address[] memory identityIds = abi.decode(_data, (address[]));
 
-        for(uint i = 0; i < identityIds.length; i++) {
+        for (uint i = 0; i < identityIds.length; i++) {
             // get application from applications mapping
             // check if application milestone is accepted (lookup applications mapping)
             // update application to status to ALLOCATED and make payment
@@ -82,13 +86,26 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     // NOTE: This will not be used in a direct grants strategy, no distribution strategy will be implemented.
-    function generatePayouts() external payable override returns (bytes memory) {
+    function generatePayouts()
+        external
+        payable
+        override
+        returns (bytes memory)
+    {
         revert();
     }
 
-    // -- CUSTOM Events    
-    event ApplicationSubmitted(bytes32 indexed id, address indexed applicant, ApplicationStatus status);
-    event ApplicationStatusSet(bytes32 indexed id, address indexed applicant, ApplicationStatus status);
+    // -- CUSTOM Events
+    event ApplicationSubmitted(
+        bytes32 indexed id,
+        address indexed applicant,
+        ApplicationStatus status
+    );
+    event ApplicationStatusSet(
+        bytes32 indexed id,
+        address indexed applicant,
+        ApplicationStatus status
+    );
 
     // -- CUSTOM Variables
 
@@ -101,7 +118,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     // stores mapping from identityId -> MilestoneApplication
-    mapping (address => MilestoneApplication[]) public applications;
+    mapping(address => MilestoneApplication[]) public applications;
 
     // -- CUSTOM Functions
 
@@ -111,11 +128,10 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     function reviewApplications(bytes[] memory _data) external {
-        // decode data to get list of 
+        // decode data to get list of
         //  - identityId
         //  - index of application (to know which milestone)
         //  - status
-        
         // update application status in applications mapping
     }
 }

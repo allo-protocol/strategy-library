@@ -25,7 +25,7 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         // Reapplied @discuss: How do we add new status
     }
 
-    function initialize(bytes calldata encodedParameters  ) external initializer {
+    function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
         //  - poolId
         //  - allo
@@ -45,26 +45,41 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     function applyToPool(
         bytes memory _data,
         address sender
-    ) external payable returns (bytes memory) {
+    ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId
         //  - applicationMetaPtr
         //  - recipientAddress
+        address[] memory identityIds = abi.decode(_data, (address[]));
 
+        for (uint i = 0; i < identityIds.length; i++) {
+            // get application from applications mapping
+            // check if application milestone is accepted (lookup applications mapping)
+            // update application to status to ALLOCATED and make payment
+            // emit event
+        }
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
- 
+
         // set application status to pending or reapplied
         // add / update applications mapping
+
+        return _data;
     }
 
     function getApplicationStatus(
         bytes memory _data
     ) external view returns (ApplicationStatus) {
         // decode data to get identityId
+        (address identityId) = abi.decode(_data, (address));
+
         // return application status from applications mapping
+        return applications[identityId].status;
     }
 
-    function allocate(bytes memory _data, address sender) external payable returns (uint) {
+    function allocate(
+        bytes memory _data,
+        address sender
+    ) external payable returns (uint) {
         // decode data to get identityId, amount
         // check application status
         // check if allocator is valid

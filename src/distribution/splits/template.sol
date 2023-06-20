@@ -2,11 +2,12 @@
 pragma solidity ^0.8.0;
 
 import {IDistributionStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IDistributionStrategy.sol";
+import {Initializable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 
 contract SplitsDistributionStrategy is IDistributionStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
 
-    address token;
+    address public token;
 
     modifier isPoolOwner() {
         // lookup pool owner from IAllo contract
@@ -40,6 +41,6 @@ contract SplitsDistributionStrategy is IDistributionStrategy, Initializable {
 
 
     // -- CUSTOM Variable
-    address split;
+    address public split;
 
 }

@@ -45,7 +45,8 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data
+        bytes memory _data,
+        address sender
     ) external payable override returns (bytes memory) {
         // decode data to get
         //  - identityId

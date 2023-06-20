@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {IAllocationStrategy} from "../../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
 
-contract DirectOwnerPays is IAllocationStrategy {
+contract DirectOwnerPaysMilestone is IAllocationStrategy {
     // State variables
     address public strategyOwner;
 

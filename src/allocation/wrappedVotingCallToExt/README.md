@@ -18,8 +18,8 @@ Flow: <https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557422793722
 // create a mapping of applicationId to application status
 mapping(address => Application) applications;
 
-// some means to track votes casted
-mapping(address => uint32) votesCastByUser;
+// some means to track votes casted by user
+mapping(address => uint32) voteCounter;
 ```
 
 #### New Functions

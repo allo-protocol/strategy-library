@@ -16,8 +16,13 @@ struct Application {
 // create a mapping of applicationId to application status
 mapping(address => Application) applications;
 
-// some means to track votes casted
-mapping(address => uint32) votesCastByUser;
+// some means to track votes casted by user
+mapping(address => uint32) voteCounter;
+
+// identityId => allocationAmount
+EnumerableMap.AddressToUintMap private allocationTracker;
+uint256 totalAllocations;
+
 ```
 
 #### New Functions

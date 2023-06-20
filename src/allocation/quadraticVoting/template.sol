@@ -65,13 +65,16 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     function allocate(bytes memory _data, address sender) external payable returns (uint) {
         // decode data to get identityId, amount, token
         // check application status
-        // check if allocator is valid
+        // check if allocator is valid by looking up voteCounter and is less than votesPerAllocator
         // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
         // update votesReceived on applications mapping
     }
 
     function generatePayouts() external payable returns (bytes memory) {
         // uses votesReceived from applications as input to run the QV math to generate payout
+        // uses allocationTracker as input
+        // loop through allocationTracker and generate payouts
+        // calc using QV math 
     }
 
     // -- CUSTOM Variables
@@ -87,8 +90,13 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     // create a mapping of applicationId to application status
     mapping(address => Application) applications;
 
-    // some means to track votes casted
-    mapping(address => uint32) votesCastByUser;
+    // some means to track votes casted by user
+    mapping(address => uint32) voteCounter;
+
+    // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
+
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

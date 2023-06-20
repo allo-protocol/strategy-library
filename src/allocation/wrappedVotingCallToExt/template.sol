@@ -70,7 +70,7 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
         // decode data to get identityId, amount
         // check application status
         // check if allocator is valid
-        // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
+        // check if allocator has enough votes (check voteCounter <= votesPerAllocator)
         // add allocation to allocation tracker
         // add allocation to total allocations
 
@@ -101,8 +101,8 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
     // create a mapping of applicationId to application status
     mapping(address => Application) applications;
 
-    // some means to track votes casted
-    mapping(address => uint32) votesCastByUser;
+    // some means to track votes casted by user
+    mapping(address => uint32) voteCounter;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

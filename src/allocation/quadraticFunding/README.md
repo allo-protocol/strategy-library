@@ -6,6 +6,9 @@ Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557412142387&
 #### New Variables
 ```javascript
 // create a mapping of IdentityId to application status
+EnumerableMap.AddressToUintMap private allocationTracker;
+uint256 totalAllocations;
+
 struct Application {
     address identityId;
     address recipientAddress;

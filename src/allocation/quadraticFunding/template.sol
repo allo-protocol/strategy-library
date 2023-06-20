@@ -5,6 +5,7 @@ import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interface
 
 contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
 
     uint256 poolId;
     address allo;
@@ -13,6 +14,9 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     uint64 applicationEnd;
     uint64 votingStart;
     uint64 votingEnd;
+
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
 
     enum ApplicationStatus {
         None,
@@ -67,7 +71,11 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     ) external payable returns (uint) {
         // decode data to get identityId, amount, token
         // check application status from applications mapping
+        // add allocation to allocation tracker
+        // add allocation to total allocations
         // transfer tokens to project payout address
+
+        // emit event
     }
 
     function generatePayouts() external payable returns (bytes memory) {
@@ -111,7 +119,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
 
     function setPayouts(bytes memory _data) external isPoolOwner {
         // TODO: discuss if this should be on distribution strategy
-        // populate payouts array
+        // populate payouts array using allocationTracker and totalAllocations
         // would be invoked by pool owner for off-chain logic
     }
 }

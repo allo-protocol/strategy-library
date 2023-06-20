@@ -61,7 +61,7 @@ contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
         // return application status from applications mapping
     }
 
-    function allocate(bytes memory _data) external payable returns (uint) {
+    function allocate(bytes memory _data, address sender) external payable returns (uint) {
         // decode data to get identityId, amount, token
         // check application status
         // check if allocator is valid

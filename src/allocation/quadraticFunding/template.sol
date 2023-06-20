@@ -25,7 +25,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     // call to allo() and query pools[poolId].owner
     function owner() external view returns (address);
 
-    function initialize(bytes calldata encodedParameters  ) external initializer {
+    function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
         //  - poolId
         //  - allo

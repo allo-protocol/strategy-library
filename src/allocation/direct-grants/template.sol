@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {IAllocationStrategy} from "../../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
+import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
+import {Initializable} from "../../../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {MetaPtr} from "../../../lib/allo-v2/contracts/utils/MetaPtr.sol";
 
 /// @title DirectGrants
 /// @notice This contract implements the core allocation strategy.

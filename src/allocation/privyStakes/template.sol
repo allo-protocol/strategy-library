@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
 
-contract QVAllocationStrategy is IAllocationStrategy, Initializable {
+contract PrivyStakesAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
-
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
     uint256 poolId;
     address allo;
 
@@ -26,14 +26,13 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         // set common params
         //  - poolId
         //  - allo
-        // parameters required for QF
+        // parameters required
         //  - applicationStart
         //  - applicationEnd
         //  - allocationStart
         //  - allocationEnd
         //  - votesPerAllocator
-        // optional paramers for application or allocation gating
-        // - EAS contract / registry contract/ POH contract address
+        //  - allowed list of voters
     }
 
     function owner() external view returns (address) {
@@ -63,40 +62,38 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function allocate(bytes memory _data, address sender) external payable returns (uint) {
-        // decode data to get identityId, amount, token
+        // decode data to get identityId, amount
         // check application status
-        // check if allocator is valid by looking up voteCounter and is less than votesPerAllocator
+        // check if allocator is valid
         // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
-        // update votesReceived on applications mapping
+        // add allocation to allocation tracker
+        // add allocation to total allocations
     }
 
     function generatePayouts() external payable returns (bytes memory) {
-        // uses votesReceived from applications as input to run the QV math to generate payout
         // uses allocationTracker as input
         // loop through allocationTracker and generate payouts
-        // calc using QV math 
+        // calc (allocationTracker.at(index) * 100) / totalAllocations
     }
 
     // -- CUSTOM Variables
+
+    // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
 
     struct Application {
         address identityId;
         address recipientAddress;
         ApplicationStatus status;
         MetaPtr metaPtr;
-        uint32 votesReceived;
     }
 
     // create a mapping of applicationId to application status
     mapping(address => Application) applications;
 
-    // some means to track votes casted by user
-    mapping(address => uint32) voteCounter;
-
-    // identityId => allocationAmount
-    EnumerableMap.AddressToUintMap private allocationTracker;
-    uint256 totalAllocations;
-
+    // some means to track votes casted
+    mapping(address => uint32) votesCastByUser;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

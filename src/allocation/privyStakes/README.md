@@ -1,10 +1,13 @@
 ## Overview 
 
-Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557414692165&cot=14
+Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557421590780&cot=14
 
 
 #### New Variables
 ```javascript
+EnumerableMap.AddressToUintMap private allocationTracker;
+uint256 totalAllocations;
+
 struct Application {
     address identityId;
     address recipientAddress;
@@ -16,13 +19,8 @@ struct Application {
 // create a mapping of applicationId to application status
 mapping(address => Application) applications;
 
-// some means to track votes casted by user
-mapping(address => uint32) voteCounter;
-
-// identityId => allocationAmount
-EnumerableMap.AddressToUintMap private allocationTracker;
-uint256 totalAllocations;
-
+// some means to track votes casted
+mapping(address => uint32) votesCastByUser;
 ```
 
 #### New Functions

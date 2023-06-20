@@ -5,11 +5,10 @@ import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interface
 
 contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
 
     uint256 poolId;
     address allo;
-    // todo: should we name this poolOwner?
-    address strategyOwner;
 
     uint64 applicationStart;
     uint64 applicationEnd;
@@ -24,20 +23,10 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
         // Reapplied @discuss: How do we add new status
     }
 
-    function owner() public view returns (address) {
-        // returns pool owner by query allo contract
-        return strategyOwner;
-    }
+    // call to allo() and query pools[poolId].owner
+    function owner() external view returns (address);
 
-    modifier isPoolOwner() {
-        require(
-            msg.sender == owner(),
-            "QFAllocationStrategy: Only pool owner can call this function"
-        );
-        _;
-    }
-
-    function initialize(bytes calldata encodedParameters  ) external initializer
+    function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
         //  - poolId
         //  - allo
@@ -52,41 +41,64 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data
+        bytes memory _data,
+        address sender
     ) external payable returns (bytes memory) {
         // decode data to get
-        //  - project Id
+        //  - identityId
         //  - applicationMetaPtr
+        //  - recipientAddress
+
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
-        // set application status to pending
+ 
+        // set application status to pending or reapplied
+        // add / update applications mapping
     }
 
     function getApplicationStatus(
         bytes memory _data
     ) external view returns (ApplicationStatus) {
-        // decode data to get application id
-        // return application status from mapping
+        // decode data to get identityId
+        // return application status from applications mapping
     }
 
-    function allocate(bytes memory _data) external payable returns (uint) {
-        // decode data to get application, amount, token
-        // check application status
+    function allocate(
+        bytes memory _data,
+        address sender
+    ) external payable returns (uint) {
+        // decode data to get identityId, amount, token
+        // check application status from applications mapping
+        // add allocation to allocation tracker
+        // add allocation to total allocations
         // transfer tokens to project payout address
+
+        // emit event
     }
 
     function generatePayouts() external payable returns (bytes memory) {
-        // returns applicationPayouts
+        // returns payouts
     }
 
     // -- CUSTOM Variables
 
-    // create a mapping of application id to application status
-    mapping(bytes32 => ApplicationStatus) applicationStatuses;
+    // identityId => allocationAmount
+    EnumerableMap.AddressToUintMap private allocationTracker;
+    uint256 totalAllocations;
+
+    // create a mapping of IdentityId to application status
+    struct Application {
+        address identityId;
+        address recipientAddress;
+        ApplicationStatus status;
+        MetaPtr metaPtr;
+    }
+
+    // create a mapping of applicationId to application status
+    mapping(address => Application) applications;
 
     // payouts data which will be set using setPayouts
-
     struct Payout {
-        bytes32 applicationId;
+        address recipientAddress;
         uint32 percentage;
     }
 
@@ -100,14 +112,15 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     function updateApplicationStart(uint64 _applicationStart) external {}
 
     function updateApplicationEnd(uint64 _applicationEnd) external {}
-
+ 
     function reviewApplications(bytes[] memory _data) external {
-        // decode data to get application id and status
+        // decode data to get identity id and status
         // update application status
     }
 
     function setPayouts(bytes memory _data) external isPoolOwner {
-        // sets project to percentage ratio
+        // TODO: discuss if this should be on distribution strategy
+        // populate payouts array using allocationTracker and totalAllocations
         // would be invoked by pool owner for off-chain logic
     }
 }

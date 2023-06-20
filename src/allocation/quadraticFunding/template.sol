@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
 
-contract QFAllocationStrategy is IAllocationStrategy {
+contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
 
     uint256 poolId;
@@ -37,7 +37,7 @@ contract QFAllocationStrategy is IAllocationStrategy {
         _;
     }
 
-    constructor() {
+    function initialize(bytes calldata encodedParameters  ) external initializer
         // set common params
         //  - poolId
         //  - allo
@@ -84,7 +84,13 @@ contract QFAllocationStrategy is IAllocationStrategy {
     mapping(bytes32 => ApplicationStatus) applicationStatuses;
 
     // payouts data which will be set using setPayouts
-    mapping(bytes32 => uint32) applicationPayouts;
+
+    struct Payout {
+        bytes32 applicationId;
+        uint32 percentage;
+    }
+
+    Payouts[] public payouts;
 
     // -- CUSTOM FUNCTIONS
     function updateVotingStart(uint64 _votingStart) external {}

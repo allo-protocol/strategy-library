@@ -3,8 +3,7 @@ pragma solidity ^0.8.0;
 
 import {IAllocationStrategy} from "../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
 
-contract QVAllocationStrategy is IAllocationStrategy {
-
+contract QVAllocationStrategy is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
 
     uint256 poolId;
@@ -25,8 +24,7 @@ contract QVAllocationStrategy is IAllocationStrategy {
         // Reapplied @discuss: How do we add new status
     }
 
-
-    constructor() {
+    function initialize(bytes calldata encodedParameters  ) external initializer
         // set common params
         //  - poolId
         //  - allo

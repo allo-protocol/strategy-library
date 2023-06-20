@@ -8,8 +8,13 @@ Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557412142387&
 // create a mapping of application id to application status 
 mapping (bytes32 => ApplicationStatus) applicationStatuses;
 
+struct Payout {
+    bytes32 applicationId;
+    uint32 percentage;
+}
+
 // payouts data which will be set using setPayouts
-mapping (bytes32 => uint32) applicationPayouts;
+Payouts[] public payouts;
 ```
 
 #### New Functions
@@ -32,7 +37,7 @@ function reviewApplications(bytes[] memory _data) external {
 }
 
 function setPayouts(bytes memory _data) external isPoolOwner(){
-    // sets project to percentage ratio
+    // set payouts
     // would be invoked by pool owner for off-chain logic
 }
 ```

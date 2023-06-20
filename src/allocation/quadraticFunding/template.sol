@@ -15,6 +15,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     uint64 votingStart;
     uint64 votingEnd;
 
+    // identityId => allocationAmount
     EnumerableMap.AddressToUintMap private allocationTracker;
     uint256 totalAllocations;
 

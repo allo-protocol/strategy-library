@@ -8,8 +8,6 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
 
     uint256 poolId;
     address allo;
-    // todo: should we name this poolOwner?
-    address strategyOwner;
 
     uint64 applicationStart;
     uint64 applicationEnd;
@@ -24,20 +22,10 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
         // Reapplied @discuss: How do we add new status
     }
 
-    function owner() public view returns (address) {
-        // returns pool owner by query allo contract
-        return strategyOwner;
-    }
+    // call to allo() and query pools[poolId].owner
+    function owner() external view returns (address);
 
-    modifier isPoolOwner() {
-        require(
-            msg.sender == owner(),
-            "QFAllocationStrategy: Only pool owner can call this function"
-        );
-        _;
-    }
-
-    function initialize(bytes calldata encodedParameters  ) external initializer
+    function initialize(bytes calldata encodedParameters  ) external initializer {
         // set common params
         //  - poolId
         //  - allo
@@ -59,6 +47,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
         //  - applicationMetaPtr
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
         // set application status to pending
+        // if they invoke this function again, we should update the application status to reapplied
     }
 
     function getApplicationStatus(
@@ -100,7 +89,7 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     function updateApplicationStart(uint64 _applicationStart) external {}
 
     function updateApplicationEnd(uint64 _applicationEnd) external {}
-
+ 
     function reviewApplications(bytes[] memory _data) external {
         // decode data to get application id and status
         // update application status

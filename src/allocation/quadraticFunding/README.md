@@ -46,7 +46,7 @@ function setPayouts(bytes memory _data) external isPoolOwner(){
 ### Open Questions
 
 - How do we new add application status (like reapplied)
-
+- Would it makes sense to have setPayouts on DistributionStrategy and generatePayout returns nothing ?
 
 ## Variations
 

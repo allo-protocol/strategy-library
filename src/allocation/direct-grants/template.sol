@@ -3,20 +3,23 @@ pragma solidity ^0.8.19;
 
 import {IAllocationStrategy} from "../../../../lib/allo-v2/contracts/core/interfaces/IAllocationStrategy.sol";
 
-/// @title DirectOwnerPaysMilestone
-/// @notice This contract implements the core allocation strategy for a given distribution strategy.
+/// @title DirectGrants
+/// @notice This contract implements the core allocation strategy.
 /// @dev This contract is meant to be used as an example for running a committee vote strategy.
-contract CommitteeVote is IAllocationStrategy {
+contract DirectGrants is IAllocationStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
 
     // The id of the Pool contract that this strategy is going to use.
     // NOTE: how are we going to use the pool id?
     uint256 pool;
-    // todo: should we name this poolOwner?
-    address strategyOwner;
-
     uint64 applicationStart;
     uint64 applicationEnd;
+    
+
+    modifier isCommitteeOwner() {
+       // check if msgs.sender is committee owner
+        _;
+    }
 
     enum ApplicationStatus {
         None,
@@ -26,8 +29,6 @@ contract CommitteeVote is IAllocationStrategy {
         // Reapplied @discuss: How do we add new status?
     }
 
-    // mapping(uint256 => Pool) public pools;
-
     // NOTE: do we need the application metadata here?
     struct Application {
         bytes32 id;
@@ -35,31 +36,8 @@ contract CommitteeVote is IAllocationStrategy {
         ApplicationStatus status;
     }
 
-    event ApplicationSubmitted(
-        bytes32 indexed id,
-        address indexed applicant,
-        ApplicationStatus status
-    );
-    event ApplicationStatusSet(
-        bytes32 indexed id,
-        address indexed applicant,
-        ApplicationStatus status
-    );
-
-    event MilestoneCreated(
-        bytes32 indexed id,
-        uint256 amount,
-        address indexed recipient
-    );
-    event MilestoneSubmitted(
-        bytes32 indexed id,
-        uint256 amount,
-        address indexed recipient
-    );
-    event MilestoneStatusSet(bytes32 indexed id, MilestoneStatus status);
-
     // Constructor
-    constructor() {
+    function initialize(bytes calldata encodedParameters  ) external initializer {
         strategyOwner = msg.sender;
     }
 
@@ -67,25 +45,21 @@ contract CommitteeVote is IAllocationStrategy {
         return strategyOwner;
     }
 
-    function getApplicationStatus(
-        bytes memory _data
-    ) external view returns (ApplicationStatus) {
+    function getApplicationStatus(bytes memory _data) external view returns (ApplicationStatus) {
         // decode data to get application id
         // return application status from mapping
     }
 
     mapping(address => Application) public applications;
 
-    // NOTE: what do we want the _data to be?
-    function applyToPool(
-        bytes memory _data
-    ) external payable override returns (bytes memory) {
+    function applyToPool(bytes memory _data) external payable override {
+        // decode data to get application
         // NOTE: logic if we wanted to gate applications based on EAS / registry check
-        // NOTE: logic to check milestone status?
         // set application status to pending
-        return _data;
+        // emit event
     }
 
+    // can be invoked only commitee
     function allocate(
         bytes memory _data
     ) external payable override returns (uint) {
@@ -94,30 +68,19 @@ contract CommitteeVote is IAllocationStrategy {
         return amount;
     }
 
-    // NOTE: This was added for ease of fron-end integration.
-    function isPayoutGenerateable() external pure returns (bool) {
-        return false;
-    }
-
-    // NOTE: This was added for ease of fron-end integration.
-    function isClaimable() external pure returns (bool) {
-        return false;
-    }
-
     // NOTE: This will not be used in a direct grants strategy, no distribution strategy will be implemented.
-    function generatePayouts()
-        external
-        payable
-        override
-        returns (bytes memory)
-    {
-        bytes memory data = "";
-
-        return data;
+    function generatePayouts() external payable override returns (bytes memory) {
+        revert();
     }
 
-    // Custom logic
 
+    // -- CUSTOM Events    
+    event ApplicationSubmitted(bytes32 indexed id, address indexed applicant, ApplicationStatus status);
+    event ApplicationStatusSet(bytes32 indexed id, address indexed applicant, ApplicationStatus status);
+    event MilestoneSubmitted(bytes32 indexed id, uint256 amount, address indexed recipient);
+    event MilestoneStatusSet(bytes32 indexed id, MilestoneStatus status);
+
+    // -- CUSTOM Variables
     enum MilestoneStatus {
         Valid,
         Paid,
@@ -138,15 +101,16 @@ contract CommitteeVote is IAllocationStrategy {
 
     // milestone id to milestone
     mapping(bytes32 => Milestone) public milestones;
-    // user to votes cast by that user
-    mapping(address => uint32) public votesCastByUser;
+
+    function isClaimable() external pure returns (bool) {
+        // To show that this strategy is not claimable
+        return false;
+    }
 
     function reviewApplications(bytes[] memory _data) external {
-        // NOTE: toggle application status based on _data values
-        if (_data.length == 0) {
-            revert("No applications to review");
-        }
-
+        // decode _date to get applications
+        // toggle application status 
+        // possible: prevent application 
         for (uint i = 0; i < _data.length; i++) {
             (address applicant, ApplicationStatus status) = abi.decode(
                 _data[i],
@@ -192,8 +156,8 @@ contract CommitteeVote is IAllocationStrategy {
         return "";
     }
 
-    // used to set the staus of a milestone
-    function setMilestoneStatus(bytes32 _id, MilestoneStatus _status) external {
+    // used to set the status of a milestone
+    function setMilestoneStatus(bytes32 _id, MilestoneStatus _status) external isCommitteeOwner {
         // NOTE: custom logic to check milestone status
         Milestone storage milestone = milestones[_id];
         milestone.status = _status;

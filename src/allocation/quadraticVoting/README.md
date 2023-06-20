@@ -6,7 +6,7 @@ Flow: https://miro.com/app/board/uXjVMXyfa-o=/?moveToWidget=3458764557414692165&
 #### New Variables
 ```javascript
 // some means to track votes casted
-mapping (address => uint32) votesCastedByVoter;
+mapping (address => uint32) votesCastByUser;
 
 // create a mapping of application id to application status 
 mapping (bytes32 => ApplicationStatus) applicationStatuses;
@@ -39,7 +39,6 @@ function reviewApplications(bytes[] memory _data) external {
 ### Open Questions
 
 - How do we new add application status (like reapplied)
-
 
 ## Variations
 

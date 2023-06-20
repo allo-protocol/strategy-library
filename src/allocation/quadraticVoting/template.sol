@@ -8,8 +8,6 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
 
     uint256 poolId;
     address allo;
-    // todo: should we name this poolOwner?
-    address strategyOwner;
 
     uint64 applicationStart;
     uint64 applicationEnd;
@@ -40,7 +38,6 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
 
     function owner() external view returns (address) {
         // returns pool owner by query allo contract
-        return strategyOwner;
     }
 
     function applyToPool(
@@ -51,6 +48,7 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         //  - applicationMetaPtr
         // NOTE: custom logic if we wanted to gate applications based on EAS / registry check
         // set application status to pending
+        // if they invoke this function again, we should update the application status to reapplied
     }
 
     function getApplicationStatus(

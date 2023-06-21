@@ -17,8 +17,6 @@ contract DirectGrantsDistributionStrategy is
     uint256 poolId;
     address allo;
     address token;
-    // todo: should we name this poolOwner?
-    address strategyOwner;
 
     constructor() {
         _disableInitializers();
@@ -26,10 +24,11 @@ contract DirectGrantsDistributionStrategy is
 
     function initialize(bytes calldata encodedParameters) external initializer {
         // set common params
+        // - poolId
     }
 
     function owner() public view override returns (address) {
-        return strategyOwner;
+        // returns pool owner by query allo contract
     }
 
     // NOTE: defaults to send ETH to recipients
@@ -56,10 +55,6 @@ contract DirectGrantsDistributionStrategy is
     }
 
     // Custom functions
-
-    function setStrategyOwner(address _strategyOwner) public {
-        strategyOwner = _strategyOwner;
-    }
 
     // todo: this will be for when we use ERC20 options, not ETH
     function setToken(address _token) public {

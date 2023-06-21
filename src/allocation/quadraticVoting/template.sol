@@ -97,7 +97,7 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         // Vote Weight = (Number of Tokens)^2
     }
 
-    function generatePayouts() external payable returns (bytes memory) {
+    function generatePayouts() external view returns (bytes memory) {
         // uses votesReceived from applications as input to run the QV math to generate payout
         // uses allocationTracker as input
         // loop through allocationTracker and generate payouts

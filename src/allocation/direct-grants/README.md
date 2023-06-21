@@ -49,6 +49,7 @@ function reviewApplications(bytes[] memory _data) external {
 - Question to product: When i submit a milestone application ->
     - do i request amount to be paid
     - or is it pre-determined
+- generatePayout would have to be updated to accept argument to specify which milestone should be paid out
 
 ## Variations
 

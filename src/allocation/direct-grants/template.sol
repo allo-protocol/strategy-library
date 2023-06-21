@@ -87,14 +87,11 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         return 1;
     }
 
-    // NOTE: This will not be used in a direct grants strategy, no distribution strategy will be implemented.
-    function generatePayouts()
-        external
-        payable
-        override
-        returns (bytes memory)
-    {
-        revert();
+    function generatePayouts() external view override returns (bytes memory) {
+        // return the data needed to send to distribution strategy
+        // decode data
+
+        return "";
     }
 
     // -- CUSTOM Events

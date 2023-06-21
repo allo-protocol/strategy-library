@@ -71,12 +71,20 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         // return amount;
     }
 
-    // NOTE: This will not be used in a direct grants strategy, no distribution strategy will be implemented.
     function generatePayouts() external payable override returns (bytes memory) {
         // TODO: WHAT TO DO HERE? HOW DO WE UPDATE STATUS OF MILESTONE TO PAID ?
         // MIGHT HAVE TO DISTRIBUTION STRATEGY TO DO THIS
         // SHOULD THIS HAVE ARGUMENT TO PASS IN LIST OF MILESTONES TO PAY OUT ?
-        revert();
+
+        // There are 2 ways to do this
+        //  - Anytime this is invoked, it generates a list of all the ALLOCATED application milestone
+        //    even if it's paid out. It would be upto the distribution strategy to check if it's already paid out. 
+        //    Downside: would result in very custom distribution strategy. CANNOT USE EXISTING ONES (as they don't track)   
+
+        //  - Another option is having a callback function which the distribution strategy would invoke after paying out
+        //    so that it status here can be marked as PAID. This again results in custom distribution strategy cause they have to 
+        //    invoke this callback function. Maybe we add this callback to the IAllocationStrategy interface and 
+        //    expect IDistribution.activateDistribution to invoke this callback function ALWAYS.
     }
 
     // -- CUSTOM Events    

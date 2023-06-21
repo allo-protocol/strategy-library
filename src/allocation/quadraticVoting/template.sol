@@ -11,8 +11,8 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
 
     uint64 applicationStart;
     uint64 applicationEnd;
-    uint64 votingStart;
-    uint64 votingEnd;
+    uint64 allocationStart;
+    uint64 allocationEnd;
 
     enum ApplicationStatus {
         None,
@@ -68,6 +68,7 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         // check if allocator is valid by looking up voteCounter and is less than votesPerAllocator
         // check if allocator has enough votes (rely on votesCasted and votesPerAllocator)
         // update votesReceived on applications mapping
+        // Vote Weight = (Number of Tokens)^2
     }
 
     function generatePayouts() external payable returns (bytes memory) {
@@ -99,9 +100,9 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
 
 
     // -- CUSTOM FUNCTIONS
-    function updateVotingStart(uint64 _votingStart) external {}
+    function updateAllocationStart(uint64 _allocationStart) external {}
 
-    function updateVotingEnd(uint64 _votingEnd) external {}
+    function updateAllocationEnd(uint64 _allocationEnd) external {}
 
     function updateApplicationStart(uint64 _applicationStart) external {}
 

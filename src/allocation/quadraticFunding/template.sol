@@ -12,8 +12,8 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
 
     uint64 applicationStart;
     uint64 applicationEnd;
-    uint64 votingStart;
-    uint64 votingEnd;
+    uint64 allocationStart;
+    uint64 allocationEnd;
 
     enum ApplicationStatus {
         None,
@@ -105,9 +105,9 @@ contract QFAllocationStrategy is IAllocationStrategy, Initializable {
     Payouts[] public payouts;
 
     // -- CUSTOM FUNCTIONS
-    function updateVotingStart(uint64 _votingStart) external {}
+    function updateAllocationStart(uint64 _allocationStart) external {}
 
-    function updateVotingEnd(uint64 _votingEnd) external {}
+    function updateAllocationEnd(uint64 _allocationEnd) external {}
 
     function updateApplicationStart(uint64 _applicationStart) external {}
 

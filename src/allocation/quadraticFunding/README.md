@@ -25,7 +25,7 @@ struct Payout {
     uint32 percentage;
 }
 
-Payouts[] public payouts;
+Payout[] public payouts;
 ```
 
 #### New Functions

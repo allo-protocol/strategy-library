@@ -21,8 +21,8 @@ The `PrivyStakesAllocationStrategy` contract requires initialization to set the 
 - `allo`: The address of the allo contract
 - `applicationStart`: The timestamp when the application period starts
 - `applicationEnd`: The timestamp when the application period ends
-- `votingStart`: The timestamp when the voting period starts
-- `votingEnd`: The timestamp when the voting period ends
+- `allocationStart`: The timestamp when the voting period starts
+- `allocationEnd`: The timestamp when the voting period ends
 - `votesPerAllocator`: The number of votes every user receives
 - `allowedUser`: The list of users which are allowed to vote
   
@@ -84,9 +84,9 @@ The Privy Stakes allocation strategy provides a function called `generatePayouts
 ## Customization Options
 The Privy Stakes allocation strategy provides several functions to customize the strategy's behavior:
 
-- `updateVotingStart(uint64 _votingStart)`: Allows updating the voting period's start timestamp.
+- `updateAllocationStart(uint64 _allocationStart)`: Allows updating the voting period's start timestamp.
 
-- `updateVotingEnd(uint64_votingEnd)`: Allows updating the voting period's end timestamp.
+- `updateAllocationEnd(uint64_allocationEnd)`: Allows updating the voting period's end timestamp.
 
 - `updateApplicationStart(uint64 _applicationStart)`: Allows updating the application period's start timestamp.
 
@@ -145,8 +145,8 @@ mapping(address => uint32) votesCastByUser;
 Functions around updating constructor arguments.
 
 ```javascript
-function updateVotingStart(uint64 _votingStart) external {}
-function updateVotingEnd(uint64 _votingEnd) external {}
+function updateAllocationStart(uint64 _allocationStart) external {}
+function updateAllocationEnd(uint64 _allocationEnd) external {}
 function updateApplicationStart(uint64 _applicationStart) external {}
 function updateApplicationEnd(uint64 _applicationEnd) external {}
 ```

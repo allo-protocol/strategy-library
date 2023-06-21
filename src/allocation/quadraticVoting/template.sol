@@ -60,8 +60,6 @@ contract QVAllocationStrategy is IAllocationStrategy, Initializable {
         // set application status to pending or reapplied
         if (application.status == ApplicationStatus.None) {
             application.status = ApplicationStatus.Pending;
-        } else if (application.status == ApplicationStatus.Rejected) {
-            // todo: will it ever be rejected at this point?
         } else {
             // todo: figure the reapplied out
             // application.status = ApplicationStatus.Reapplied;

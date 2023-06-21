@@ -58,7 +58,8 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     }
 
     function applyToPool(
-        bytes memory _data
+        bytes memory _data,
+        address sender
     ) external payable override returns (bytes memory) {
         // NOTE: logic if we wanted to gate applications based on EAS / registry check
         // decode data to create Application struct with status pending, allocatedAmount : 0
@@ -69,9 +70,8 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable override isApprover(sender)  {
-
-        // decode data to get list of 
+    ) external payable override isApprover(sender) {
+        // decode data to get list of
         //  - identityId
         //  - index of application (to know which milestone)
         address[] memory identityIds = abi.decode(_data, (address[]));
@@ -86,29 +86,25 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         // check if application milestone is accepted (lookup applications mapping)
         // update application to status to ALLOCATED and set allocatedAmount
         // emit event
-        return 1;
+        // return amount;
     }
 
-    function generatePayouts() external view override returns (bytes memory) {
-        // return the data needed to send to distribution strategy
-        // decode data
-
-        return "";
-    }
-
-    function generatePayouts() external payable override returns (bytes memory) {
+    function generatePayouts()
+        external
+        payable
+        override
+        returns (bytes memory)
+    {
         // TODO: WHAT TO DO HERE? HOW DO WE UPDATE STATUS OF MILESTONE TO PAID ?
         // MIGHT HAVE TO DISTRIBUTION STRATEGY TO DO THIS
         // SHOULD THIS HAVE ARGUMENT TO PASS IN LIST OF MILESTONES TO PAY OUT ?
-
         // There are 2 ways to do this
         //  - Anytime this is invoked, it generates a list of all the ALLOCATED application milestone
-        //    even if it's paid out. It would be upto the distribution strategy to check if it's already paid out. 
-        //    Downside: would result in very custom distribution strategy. CANNOT USE EXISTING ONES (as they don't track)   
-
+        //    even if it's paid out. It would be upto the distribution strategy to check if it's already paid out.
+        //    Downside: would result in very custom distribution strategy. CANNOT USE EXISTING ONES (as they don't track)
         //  - Another option is having a callback function which the distribution strategy would invoke after paying out
-        //    so that it status here can be marked as PAID. This again results in custom distribution strategy cause they have to 
-        //    invoke this callback function. Maybe we add this callback to the IAllocationStrategy interface and 
+        //    so that it status here can be marked as PAID. This again results in custom distribution strategy cause they have to
+        //    invoke this callback function. Maybe we add this callback to the IAllocationStrategy interface and
         //    expect IDistribution.activateDistribution to invoke this callback function ALWAYS.
     }
 
@@ -154,14 +150,14 @@ contract DirectGrants is IAllocationStrategy, Initializable {
 
         // update application status in applications mapping
         for (uint i = 0; i < _data.length; i++) {
-            (address identityId, uint32 indexes, ApplicationStatus status) = abi
-                .decode(_data[i], (address, uint32, ApplicationStatus));
-
-            applications[identityId][indexes].status = status;
+            (address identityId, uint32[] memory indexes, ApplicationStatus status) = abi
+                .decode(_data[i], (address, uint32[], ApplicationStatus));
+            // NOTE: how to check the indexes that we are updating are the right ones?
+            applications[identityId][indexes[i]].status = status;
         }
     }
 
-    function transferOwnerhip(address newAppover) isApprover external {
+    function transferOwnerhip(address newAppover) external isApprover {
         // check if sender is approver
         // update approver
     }

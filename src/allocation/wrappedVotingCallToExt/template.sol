@@ -125,9 +125,9 @@ contract WrappedVotingCallToExt is IAllocationStrategy, Initializable {
     mapping(address => uint32) public voteCounter;
 
     // -- CUSTOM FUNCTIONS
-    function updateVotingStart(uint64 _votingStart) external {}
+    function updateAllocationStart(uint64 _allocationStart) external {}
 
-    function updateVotingEnd(uint64 _votingEnd) external {}
+    function updateAllocationEnd(uint64 _allocationEnd) external {}
 
     function updateApplicationStart(uint64 _applicationStart) external {}
 

@@ -6,13 +6,9 @@ import {Initializable} from "openzeppelin-contracts-upgradeable/contracts/proxy/
 import {EnumerableMap} from "openzeppelin-contracts/contracts/utils/structs/EnumerableMap.sol";
 import {MetaPtr} from "../../../lib/allo-v2/contracts/utils/MetaPtr.sol";
 
-error NotUsed();
-
-contract DirectGrantsDistributionStrategy is
-    IDistributionStrategy,
-    Initializable
-{
+contract DirectGrantsDistributionStrategy is IDistributionStrategy, Initializable {
     // NOTE: Should support multicall using OZ's Multicall2
+    error NotUsed();
 
     uint256 poolId;
     address allo;
@@ -32,11 +28,12 @@ contract DirectGrantsDistributionStrategy is
     }
 
     // NOTE: defaults to send ETH to recipients
+
     function activateDistribution(bytes memory _data) public override {
         // decode data to get the recipients and amounts
-        (address[] memory recipients, uint256[] memory amounts) = abi.decode(
+        (address token, address[] memory recipients, uint256[] memory amounts) = abi.decode(
             _data,
-            (address[], uint256[])
+            (address, address[], uint256[])
         );
         // Send the tokens to the recipients.
         // todo: add custom options for token types. i.e. ETH, ERC20, ERC721, ERC1155

@@ -15,7 +15,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     // NOTE: how are we going to use the pool id?
     uint256 public pool;
 
-    modifier isPoolOwner(address sender) {
+    modifier isApprover(address sender) {
         // query IAllo contract to get pool owner
         _;
     }
@@ -34,6 +34,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         //  - poolId
         //  - allo
         // parameters required for direct grants
+        // - approver address
         // optional paramers for application or allocation gating
         // - EAS contract / registry contract/ POH contract address
     }
@@ -60,7 +61,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         bytes memory _data
     ) external payable override returns (bytes memory) {
         // NOTE: logic if we wanted to gate applications based on EAS / registry check
-        // decode data to create Application struct with status pending
+        // decode data to create Application struct with status pending, allocatedAmount : 0
         // add it to applications mapping
         // emit event
     }
@@ -68,8 +69,9 @@ contract DirectGrants is IAllocationStrategy, Initializable {
     function allocate(
         bytes memory _data,
         address sender
-    ) external payable override isPoolOwner(sender) returns (uint) {
-        // decode data to get list of
+    ) external payable override isApprover(sender)  {
+
+        // decode data to get list of 
         //  - identityId
         //  - index of application (to know which milestone)
         address[] memory identityIds = abi.decode(_data, (address[]));
@@ -82,7 +84,7 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         }
 
         // check if application milestone is accepted (lookup applications mapping)
-        // update application to status to ALLOCATED and make payment
+        // update application to status to ALLOCATED and set allocatedAmount
         // emit event
         return 1;
     }
@@ -92,6 +94,22 @@ contract DirectGrants is IAllocationStrategy, Initializable {
         // decode data
 
         return "";
+    }
+
+    function generatePayouts() external payable override returns (bytes memory) {
+        // TODO: WHAT TO DO HERE? HOW DO WE UPDATE STATUS OF MILESTONE TO PAID ?
+        // MIGHT HAVE TO DISTRIBUTION STRATEGY TO DO THIS
+        // SHOULD THIS HAVE ARGUMENT TO PASS IN LIST OF MILESTONES TO PAY OUT ?
+
+        // There are 2 ways to do this
+        //  - Anytime this is invoked, it generates a list of all the ALLOCATED application milestone
+        //    even if it's paid out. It would be upto the distribution strategy to check if it's already paid out. 
+        //    Downside: would result in very custom distribution strategy. CANNOT USE EXISTING ONES (as they don't track)   
+
+        //  - Another option is having a callback function which the distribution strategy would invoke after paying out
+        //    so that it status here can be marked as PAID. This again results in custom distribution strategy cause they have to 
+        //    invoke this callback function. Maybe we add this callback to the IAllocationStrategy interface and 
+        //    expect IDistribution.activateDistribution to invoke this callback function ALWAYS.
     }
 
     // -- CUSTOM Events
@@ -108,11 +126,13 @@ contract DirectGrants is IAllocationStrategy, Initializable {
 
     // -- CUSTOM Variables
 
+    address approver;
+
     struct MilestoneApplication {
         MetaPtr metaPtr;
         address identityId;
         address recipientAddress;
-        uint256 requestedAmount; // uint256 amountPaid => set by pool owner
+        uint256 allocatedAmount; // set by pool owner during allocate
         ApplicationStatus status;
     }
 
@@ -139,5 +159,10 @@ contract DirectGrants is IAllocationStrategy, Initializable {
 
             applications[identityId][indexes].status = status;
         }
+    }
+
+    function transferOwnerhip(address newAppover) isApprover external {
+        // check if sender is approver
+        // update approver
     }
 }
